@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400&display=swap" rel="stylesheet">
+    <style>
+
+        *{
+            margin: 0%;
+            padding: 0%;
+            font-family: 'Roboto', sans-serif;
+            /* font-weight: bold; */
+        }
+
+        body{
+            background-color: rgb(17,11,11);
+            color: yellow;
+        }
+        #name{
+            text-align: center;
+            margin-top: 100px;
+        }
+        #parent{
+            width: 30%;
+            height: 230px;
+            /* border: 1px solid yellow; */
+            margin: auto;
+            margin-top: 50px;
+        }
+        #info {
+            width: 45%;
+            float: left;
+            border: 1px solid yellow;
+            height: 200px;
+            margin: 2%;
+            border-radius: 10px;
+            text-align: center;
+        }
+        #anatomy{
+            width: 45%;
+            float: right;
+            border: 1px solid yellow;
+            height: 200px;
+            margin: 2%;
+            border-radius: 10px;
+            text-align: center;
+        }
+        h3{
+            margin-top: 20px;   
+        }
+        
+        #back{
+            margin-left: 48%;
+            width: 100px;
+            height: 45px;
+            border-radius: 10px;
+            border: 1px solid yellow;
+            background-color: transparent;
+            color: yellow;
+            font-size: 18px;
+        }
+        #back:hover{
+            cursor: pointer;
+            border: 1px solid white;
+            color: white;
+        }
+        #info:hover,#anatomy:hover{
+            cursor: pointer;
+            border: 1px solid white;
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1 id="name"></h1>
+    <div id="parent">
+        <div id="info">
+            <h1>Personal info</h1>
+            <h3 id="year"></h3>
+            <h3 id="gender"></h3>
+            <h3 id="height"></h3>
+        </div>
+        <div id="anatomy">
+            <h1>anatomy</h1>
+            <h3 id="eye"></h3>
+            <h3 id="mass"></h3>
+            <h3 id="hair"></h3>
+        </div>
+    </div>
+    <div id="button">
+        <button id="back" onclick="backToHome()">Go Back</button>
+    </div>
+</body>
+</html>
+
+<script>
+
+var result = localStorage.getItem("cracter");
+console.log(result);
+
+async function getCracter(){
+
+ let res = await fetch(`https://swapi.dev/api/people/?search=${result}`);
+ let data = await res.json();
+ 
+ return data.results;
+}
+
+async function additem(){
+
+    let value = await getCracter();
+    console.log(value[0].name);
+
+    document.getElementById("name").innerHTML = value[0].name;
+    document.getElementById("year").innerHTML = `Birth Year : ${value[0].birth_year}`;
+    document.getElementById("gender").innerHTML = `Gender : ${value[0].gender}`;
+    document.getElementById("height").innerHTML = `Height : ${value[0].height}`;
+    document.getElementById("eye").innerHTML = `Eye Color : ${value[0].eye_color}`;
+    document.getElementById("mass").innerHTML = `Mass : ${value[0].mass}`;
+    document.getElementById("hair").innerHTML = `Hair Color : ${value[0].hair_color}`;
+    
+
+
+}
+
+additem();
+
+    function backToHome(){
+
+        window.location.href = "starWarApp.html"
+
+    }
+
+</script>

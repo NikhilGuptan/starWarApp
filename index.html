@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star War App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400&display=swap" rel="stylesheet">
+
+    <style>
+        *{
+            margin: 0%;
+            
+            padding: 0%;
+        }
+        body{
+            background-color: rgb(17,11,11);
+            font-family: 'Roboto', sans-serif;
+        }
+        #names{
+            width: 90%;
+            text-align: center;
+            color: white;
+        }
+        #names>h1{
+            margin-top: 30px;
+        }
+        #namesSpan{
+            display: grid;
+            width: 60%;
+            margin: auto;
+            grid-template-columns: repeat(8,12%);
+            gap: 3%;
+        }
+        #namesSpan>span{
+            border: 1px solid white;
+            border-radius: 5px;
+            width: 100px;
+            padding: 5%;
+        }
+        #image{
+            width: 20%;
+            margin: auto;
+            margin-top: 50px;
+            margin-bottom: 30px;
+            border-radius: 20px;
+        }
+        img{
+            width: 100%;   
+        }
+        #parent{
+            width: 30%;
+            margin: auto;
+        }
+        #child1>input{
+            width: 100%;
+            height: 50px;
+            border-radius: 20px;
+            background-color: rgb(45,47,48);
+            border: none;
+            /* text-decoration: none; */
+            color: white;
+        }
+        #child1>input :focus{
+            outline: none;
+        }
+        #child2{
+            /* border: 1px solid white; */
+            width: 100%;
+            height: 400px;
+            border-top: none;
+        }
+        .div{
+            background-color: rgb(45,47,48);
+            height: 40px;
+            border-radius: 20px;
+            margin-top: 10px;
+            height: 80px;
+        }
+        .div:hover{
+            background-color: gray;
+            
+        }
+        .divP{
+            color: white;
+            padding: 10px;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div id="names">
+        <h1>Some Of famous cracters of starWars</h1>
+        <div id="namesSpan">
+            <span>Darth Vader</span>
+            <span>Luke</span>
+            <span>Chewbacca</span>
+            <span>Princess Leia</span>
+            <span>Han Solo</span>
+            
+            <span>Owens lars</span>
+            <span>Chief jawa</span>
+            <span>Chall Bekan</span>
+
+        </div>
+    </div>
+<div id="image">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Star_Wars_Logo.svg/1024px-Star_Wars_Logo.svg.png" alt="">
+</div>
+<div id="parent">
+    <div id="child1">
+        <input type="text" oninput="findChracter()" name="" id="quary" placeholder="Search By Name">
+    </div>
+    <div id="child2">
+
+    </div>
+</div>
+    
+</body>
+</html>
+
+<script>
+
+    let cracter = document.getElementById("child2");
+    
+    var timerId;
+
+    // Geeting the value using api
+  async  function find(){
+
+    let quary = document.getElementById("quary").value;
+
+    if(quary.length<=2){
+        return false;
+    }
+
+    let res = await fetch(`https://swapi.dev/api/people/?search=${quary}`)
+    let data = await res.json();
+   // console.log(data);
+    return data.results;
+    
+
+    }
+
+    function findChracter(){
+
+        if(timerId){
+            return false;
+        }
+
+        timerId = setTimeout(()=>{
+            main()
+
+            timerId = undefined;
+        },500)
+       
+
+    }
+
+    function appendCharacter(d){
+
+        cracter.innerHTML = null;
+
+        d.forEach(({name,gender,birth_year})=>{
+
+            let div = document.createElement("div");
+            div.setAttribute("class","div");
+
+            let p = document.createElement("p")
+            p.setAttribute("class","divP")
+
+            p.innerHTML = name;
+            p.style.float = "left";
+            p.style.color = "rgb(255,235,0)";
+            p.addEventListener("click",function(){
+
+                if (localStorage.getItem("cracter") == null) {
+                    localStorage.setItem("cracter",p.innerHTML)
+                } else {
+                    localStorage.removeItem("cracter");
+                    localStorage.setItem("cracter",p.innerHTML)
+                }
+
+
+                window.location.href = "starWarsCracterInfo.html"
+
+            })
+            let g = document.createElement("p");
+            g.innerHTML = gender;
+            g.setAttribute("class","divP")
+            g.style.float = "right";
+
+            let y = document.createElement("p");
+            y.innerHTML = birth_year;
+            y.setAttribute("class", "divP")
+            y.style.clear = "both";
+
+            
+
+            div.append(p,g,y)
+            child2.append(div)
+        })
+
+    }
+
+
+    async function main(){
+
+        let char = await find()
+        console.log(char);
+        appendCharacter(char)
+
+
+    }
+
+</script>
